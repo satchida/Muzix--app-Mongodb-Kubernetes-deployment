@@ -1,0 +1,39 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    run: mongodb
+  name: mongodb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: mongodb
+  template:
+    metadata:
+      labels:
+        run: mongodb
+    spec:
+      containers:
+      - image: mongo
+        imagePullPolicy: Always
+        name: mongodb
+        ports:
+        - containerPort: 27017
+          protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: mongodb
+  name: mongodb
+spec:
+  ports:
+  - nodePort: 31675
+    port: 27017
+    protocol: TCP
+    targetPort: 27017
+  selector:
+    run: mongodb
+  type: NodePort
